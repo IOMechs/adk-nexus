@@ -1,0 +1,25 @@
+.session-item {
+  border-radius: 5px;
+  padding: 4px;
+  cursor: pointer;
+  display: block;
+  color: inherit !important;
+  text-decoration: none !important;
+  flex: 1;
+}
+
+.session-item:hover {
+  background-color: #ff4b4bb6;
+}
+
+#current_session {
+  background-color: #912b2bb6;
+}
+
+.session-item sup {
+  color: rgb(194, 194, 194);
+}
+
+.bin-icon:hover {
+  background-color: rgba(255, 75, 75, 0.1);
+}
