@@ -129,6 +129,12 @@ If you have a suggestion that would make this better, please fork the repo and c
 4.  Push to the Branch (`git push origin feature/AmazingFeature`)
 5.  Open a Pull Request
 
+## 🏢 About IOMechs
+
+This open-source project is proudly maintained by IOMechs. We specialize in creating intelligent automation and AI-powered solutions to drive business efficiency and innovation.
+
+For inquiries about AI Automation or custom AI-Powered Solutions, please reach out to us at [info@iomechs.com](mailto:info@iomechs.com).
+
 ## 📄 License
 
 Distributed under the MIT License. See `LICENSE.txt` for more information.
