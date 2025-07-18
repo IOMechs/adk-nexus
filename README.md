@@ -2,7 +2,7 @@
 # ADK Chatbot for Vertex AI
 
 [![Python Version](https://img.shields.io/badge/Python-3.9%2B-blue.svg)](https://www.python.org/downloads/)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.46.0-red.svg)](https://www.streamlit.io/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.47.0-red.svg)](https://www.streamlit.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A turnkey, open-source Streamlit chatbot interface designed for seamless integration with agents deployed on Google Cloud's Vertex AI Agent Engine. This project empowers developers to effortlessly connect their custom agents, deploy them, and share them with the world.
@@ -41,7 +41,6 @@ Next, open `.streamlit/secrets.toml` and populate it with your specific Google C
 
 # --- Required Configuration ---
 RESOURCE_ID = "your-agent-engine-resource-id"
-PROJECT_ID = "your-gcp-project-id"
 LOCATION = "your-gcp-region"
 
 # --- Optional Configuration ---
@@ -72,7 +71,6 @@ Your completed `secrets.toml` should look like this:
 # .streamlit/secrets.toml
 
 RESOURCE_ID = "your-agent-engine-resource-id"
-PROJECT_ID = "your-gcp-project-id"
 LOCATION = "your-gcp-region"
 CHATBOT_NAME = "your-chatbot-name" # Optional, defaults to "ADK Chatbot"
 

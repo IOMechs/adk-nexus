@@ -3,10 +3,12 @@ import vertexai
 from vertexai import agent_engines # type: ignore
 from load_chat_history import load_chat_history
 from sidebar import populate_sessions_in_sidebar
+from how_to_get_credentials import how_to_get_credentials
 from utils import load_custom_css
 from uuid import uuid4
 from streamlit_local_storage import LocalStorage # type: ignore
 from google.oauth2 import service_account
+import json
 
 # Browser's local storage
 localS = LocalStorage()
@@ -19,32 +21,53 @@ def main():
 
 	st.html(load_custom_css())
 
+	# Get GCP credentials from Streamlit secrets or local storage
+	# If not found, prompt the user to enter it
+	credentials_source = "environment"
+	service_account_info = None
+	location = None
+	resource_id = None
+
+	try:
+		# Try to get from Streamlit secrets first
+		service_account_info = st.secrets["gcp_service_account"]
+		location = st.secrets["LOCATION"]
+		resource_id = st.secrets["RESOURCE_ID"]
+
+		if not location or not resource_id or len(service_account_info) == 0:
+			raise KeyError()
+	except (KeyError):
+		# Fall back to local storage
+		gcp_credentials_str = localS.getItem("gcp_credentials")
+		if gcp_credentials_str:
+			try:
+				gcp_credentials = json.loads(gcp_credentials_str)
+				service_account_info = gcp_credentials.get("service_account_info")
+				location = gcp_credentials.get("location")
+				resource_id = gcp_credentials.get("resource_id")
+				credentials_source = "local_storage"
+			except json.JSONDecodeError as error:
+				gcp_credentials_dialog(f"Invalid credentials data: {error}")
+
+	if not service_account_info or not location or not resource_id:
+		gcp_credentials_dialog()
+
 	# Initialize Vertex AI with service account credentials
-	credentials = service_account.Credentials.from_service_account_info(
-		st.secrets["gcp_service_account"]
-	)
+	try:
+		credentials = service_account.Credentials.from_service_account_info(service_account_info)
+	except Exception as e:
+		gcp_credentials_dialog(f"Invalid service account credentials: {e}")
 
 	vertexai.init(
 		credentials=credentials,
-		project=os.getenv("PROJECT_ID"),
-		location=os.getenv("LOCATION"),
+		project=service_account_info["project_id"],
+		location=location,
 	)
-
-  	# Get the Agent Engine resource ID from environment variable or local storage
-	# If not found, prompt the user to enter it
-	resource_id_is_from_local_storage = False
-	resource_id = os.getenv("RESOURCE_ID")
-	if not resource_id:
-		resource_id = localS.getItem("agent_engine_resource_id")
-		resource_id_is_from_local_storage = True
-
-	if not resource_id:
-		agent_engine_resource_id_dialog()
 
 	try:
 		engine = agent_engines.get(resource_id)
 	except Exception as e:
-		agent_engine_resource_id_dialog(e)
+		gcp_credentials_dialog(e)
 
 	user_id = localS.getItem("user_id")
 	if not user_id:
@@ -72,13 +95,13 @@ def main():
 	# Sidebar logic
 	st.sidebar.header(f"_***{os.getenv('CHATBOT_NAME', constants.DEFAULT_CHATBOT_NAME)}***_", divider="rainbow")
 
-	if resource_id_is_from_local_storage:
-		if st.sidebar.button(
-			f"{constants.ROBOT_ICON} Change Resource ID",
+	if credentials_source == "local_storage":
+		st.sidebar.button(
+			f"{constants.ROBOT_ICON} Change Credentials",
 			key="change_resource_id_btn",
-			help="Change the Agent Engine resource ID"
-		):
-			agent_engine_resource_id_dialog()
+			help="Change the GCP credentials",
+			on_click=gcp_credentials_dialog
+		)
 
 	show_tool_calls = st.sidebar.toggle(
 		"Show Function Calls",
@@ -196,22 +219,80 @@ def get_user_sessions(_engine: agent_engines.AgentEngine, user_id: str) -> list:
 	"""
 	return _engine.list_sessions(user_id=user_id)['sessions']
 
-@st.dialog("Enter your Agent Engine's resource ID")
-def agent_engine_resource_id_dialog(error=None):
+@st.dialog("Enter your Agent's GCP credentials", width="large")
+def gcp_credentials_dialog(error=None):
+	how_to_get_credentials()
 	if error:
 		st.error(f"Error retrieving agent engine: {error}")
 
-	resource_id = st.text_input(
-		label="Resource ID",
-		value=localS.getItem("agent_engine_resource_id")
-	)
-	
-	if st.button("Retrieve"):
-		localS.setItem("agent_engine_resource_id", resource_id)
-		st.success("Resource ID saved!")
-		st.rerun()
-	else:
-		st.stop()
+	# Try to get existing credentials from local storage
+	existing_credentials = {}
+	gcp_credentials_str = localS.getItem("gcp_credentials")
+	if gcp_credentials_str:
+		try:
+			existing_credentials = json.loads(gcp_credentials_str)
+		except json.JSONDecodeError:
+			pass
+
+	with st.form("agent_engine_resource_form"):
+		location = st.text_input(
+			label="Location",
+			value=os.getenv("LOCATION") or existing_credentials.get("location", "us-central1"),
+			placeholder="us-central1"
+		)
+
+		resource_id = st.text_input(
+			label="Resource ID",
+			value=existing_credentials.get("resource_id", ""),
+		)
+
+		service_account_json = st.file_uploader(
+			label="Upload service account JSON file",
+			type=["json"],
+			help="""
+				Upload your GCP service account JSON file to authenticate with Vertex AI.
+				The contents of this file will only be stored in your browser's local storage.
+			""",
+			key="service_account_uploader",
+		)
+
+		submitted = st.form_submit_button("Submit")
+
+
+		if submitted:
+			if not resource_id:
+				st.error("Resource ID is required.")
+				return
+
+			if not location:
+				st.error("Location is required.")
+				return
+
+			if service_account_json is None:
+				st.error("Service account JSON file is required.")
+				return
+
+			# Parse the service account JSON
+			try:
+				service_account_info = json.loads(service_account_json.read().decode('utf-8'))
+			except json.JSONDecodeError as e:
+				st.error(f"Invalid JSON file: {e}")
+				return
+
+			# Build credentials dictionary
+			gcp_credentials = {
+				"location": location,
+				"resource_id": resource_id,
+				"service_account_info": service_account_info
+			}
+
+			# Store as single JSON string in local storage
+			localS.setItem("gcp_credentials", json.dumps(gcp_credentials), key="set_gcp_credentials")
+
+			st.success("GCP credentials saved successfully!")
+			st.rerun()
+		else:
+			st.stop()
 
 if __name__ == "__main__":
 	main()
