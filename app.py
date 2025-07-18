@@ -1,17 +1,15 @@
 import streamlit as st, os, constants
+import vertexai
 from vertexai import agent_engines # type: ignore
 from load_chat_history import load_chat_history
 from sidebar import populate_sessions_in_sidebar
 from utils import load_custom_css
-from dotenv import load_dotenv
 from uuid import uuid4
 from streamlit_local_storage import LocalStorage # type: ignore
+from google.oauth2 import service_account
 
 # Browser's local storage
 localS = LocalStorage()
-
-# Load environment variables
-load_dotenv()
 
 def main():
 	# Set title on browser tab
@@ -21,8 +19,21 @@ def main():
 
 	st.html(load_custom_css())
 
+	# Initialize Vertex AI with service account credentials
+	credentials = service_account.Credentials.from_service_account_info(
+		st.secrets["gcp_service_account"]
+	)
+
+	vertexai.init(
+		credentials=credentials,
+		project=os.getenv("PROJECT_ID"),
+		location=os.getenv("LOCATION"),
+	)
+
+  	# Get the Agent Engine resource ID from environment variable or local storage
+	# If not found, prompt the user to enter it
 	resource_id_is_from_local_storage = False
-	resource_id = os.getenv("AGENT_ENGINE_RESOURCE_ID")
+	resource_id = os.getenv("RESOURCE_ID")
 	if not resource_id:
 		resource_id = localS.getItem("agent_engine_resource_id")
 		resource_id_is_from_local_storage = True

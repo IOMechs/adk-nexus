@@ -2,3 +2,4 @@ python-dotenv
 streamlit
 google-cloud-aiplatform[adk,agent_engines]
 streamlit-local-storage
+google-auth
