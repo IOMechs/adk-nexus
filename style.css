@@ -25,13 +25,13 @@
 }
 
 div[data-testid="stBottomBlockContainer"] {
-	padding: 1rem 1rem 1rem;
+  padding: 1rem 1rem 1rem;
 }
 
 div[data-testid="stBottomBlockContainer"]::after {
-	content: "Made with ❤️ at IOMechs" url("https://iomechs.com");
-	font-size: small;
-	position: relative;
-    top: 0.5rem;
-    left: calc(40% - 10px);
+  content: "Made with ❤️ at IOMechs";
+  font-size: small;
+  position: relative;
+  top: 0.5rem;
+  left: calc(40% - 10px);
 }
