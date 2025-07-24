@@ -5,45 +5,54 @@ def how_to_get_credentials():
     with st.expander(f"{constants.HELP_CENTER_ICON} How to get your credentials"):
         st.markdown(
             """
-            To connect to your Vertex AI Agent, you need three pieces of information:
-            1.  **Location**: The GCP region where your agent is deployed (e.g., `us-central1`).
-            2.  **Resource ID**: The unique identifier for your agent.
-            3.  **Service Account JSON**: A key file to authenticate with Google Cloud.
+### Connecting to Your Vertex AI Agent
 
-            ---
+To connect to your Vertex AI Agent, you will need to find three key pieces of information:
 
-            #### 1. Finding your Location and Resource ID
-            - Navigate to your agent in the [Vertex AI Agent Engine](https://console.cloud.google.com/vertex-ai/agents/agent-engines).
-            - Select your agent.
-            - Your **Location** and **Resource ID** can be found in your browser's URL. For example:
-              `.../locations/us-central1/agent-engines/1234567891059626240`
-              - **Location**: `us-central1`
-              - **Resource ID**: `1234567891059626240`
+*   **Location**: This is the specific Google Cloud region where your agent is located (for example, `us-central1`).
+*   **Resource ID**: This is the unique ID number assigned to your agent.
+*   **Service Account JSON**: This is a key file that allows the application to securely connect to your agent.
 
-            ---
+---
 
-            #### 2. Creating a Service Account and JSON Key
-            You need to grant this application permission to access your agent.
+### **Part 1: Find Your Agent's Location and Resource ID**
 
-            **Step 1: Go to the Service Accounts page**
-            - Go to the [Service Accounts page](https://console.cloud.google.com/iam-admin/serviceaccounts) in the Google Cloud Console.
-            - Make sure you have selected the correct project.
+1.  Open the **[Vertex AI Agent Engine](https://console.cloud.google.com/vertex-ai/agents/agent-engines)** in your web browser.
+2.  Click on the name of your agent.
+3.  Look at the URL in your browser's address bar. It will look something like this:
+    `.../locations/us-central1/agent-engines/1234567891059626240`
+    *   The **Location** is the part after `locations/` (e.g., `us-central1`).
+    *   The **Resource ID** is the long number at the end (e.g., `1234567891059626240`).
 
-            **Step 2: Create the Service Account**
-            - Click **+ CREATE SERVICE ACCOUNT**.
-            - Give it a name (e.g., `adk-chatbot-service-account`) and an optional description.
-            - Click **CREATE AND CONTINUE**.
+---
 
-            **Step 3: Grant Permissions**
-            - In the "Grant this service account access to project" section, click the **Role** dropdown.
-            - Search for and select the **Vertex AI User** role.
-            - Click **CONTINUE**, then **DONE**.
+### **Part 2: Get Your Service Account JSON Key**
 
-            **Step 4: Create and Download the JSON Key**
-            - Find your new service account in the list.
-            - Click the three-dot menu (⋮) on the right and select **Manage keys**.
-            - Click **ADD KEY** → **Create new key**.
-            - Select **JSON** as the key type and click **CREATE**.
-            - A JSON file will be downloaded. **This is the file you need to upload below.**
+You need to give the application permission to use your agent. You'll do this by creating a special account called a "Service Account" and downloading a key file.
+
+**Step 1: Go to the Service Accounts Page**
+
+*   Go to the **[Service Accounts page](https://console.cloud.google.com/iam-admin/serviceaccounts)**.
+*   Make sure the correct Google Cloud project is selected.
+
+**Step 2: Create the New Service Account**
+
+*   Click the **+ CREATE SERVICE ACCOUNT** button.
+*   Enter a name for the account (like `my-chatbot-key`).
+*   Click **CREATE AND CONTINUE**.
+
+**Step 3: Give it the Right Permission**
+
+*   Find the "Role" dropdown menu.
+*   Type **Vertex AI User** in the search box and select it.
+*   Click **CONTINUE**, and then click **DONE**.
+
+**Step 4: Download the JSON Key File**
+
+*   You will see your new service account in the list.
+*   Click the three dots (⋮) on the right side of it and choose **Manage keys**.
+*   Click **ADD KEY** and then select **Create new key**.
+*   Choose **JSON** and click **CREATE**.
+*   A JSON file will be downloaded to your computer. This is the file you need.
             """
         )
