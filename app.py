@@ -290,6 +290,9 @@ def gcp_credentials_dialog(error=None):
 			localS.setItem("gcp_credentials", json.dumps(gcp_credentials), key="set_gcp_credentials")
 
 			st.success("GCP credentials saved successfully!")
+
+			if st.query_params.get("session_id"):
+				del st.query_params["session_id"]
 			st.rerun()
 		else:
 			st.stop()
