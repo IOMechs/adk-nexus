@@ -15,6 +15,10 @@ A turnkey, open-source Streamlit chatbot interface designed for seamless integra
 *   **Secure Authentication:** Straightforward setup for Google Cloud authentication using service accounts.
 *   **Cloud Agnostic Deployment:** Deploy with ease to Streamlit Cloud or any other preferred platform.
 
+## ⚡ Instantly Test Your Agent
+To see how your agent performs right now, use our hosted version here: [adk-nexus.dev.iomechs.com](http://adk-nexus.dev.iomechs.com). A modal will prompt for your agent's credentials.
+
+
 ## 🚀 Getting Started
 
 Follow these instructions to get a local copy of the chatbot up and running.
