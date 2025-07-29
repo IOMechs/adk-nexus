@@ -35,3 +35,9 @@ div[data-testid="stBottomBlockContainer"]::after {
   top: 0.5rem;
   left: calc(40% - 10px);
 }
+
+/* Hide chat input when agent is running */
+.stApp[data-teststate=running] .stChatInput textarea,
+.stApp[data-test-script-state=running] .stChatInput textarea {
+	display: none;
+}
