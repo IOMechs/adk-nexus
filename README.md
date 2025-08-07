@@ -5,6 +5,10 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.47.0-red.svg)](https://www.streamlit.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+<video autoplay loop muted width="100%">
+  <source src="./public/ADK-Nexus-Demo.mp4" type="video/mp4">
+</video>
+
 A turnkey, open-source Streamlit chatbot interface designed for seamless integration with agents deployed on Google Cloud's Vertex AI Agent Engine. This project empowers developers to effortlessly connect their custom agents, deploy them, and share them with the world.
 
 ## ✨ Features
@@ -17,6 +21,9 @@ A turnkey, open-source Streamlit chatbot interface designed for seamless integra
 
 ## ⚡ Instantly Test Your Agent
 To see how your agent performs right now, use our hosted version here: [adk-nexus.dev.iomechs.com](http://adk-nexus.dev.iomechs.com). A modal will prompt for your agent's credentials.
+
+## ▶️ Video Tutorial
+[![Watch the video](https://img.youtube.com/vi/y7damsm8Qos/maxresdefault.jpg)](https://youtu.be/y7damsm8Qos)
 
 
 ## 🚀 Getting Started
@@ -35,7 +42,7 @@ To configure your application, you'll need to create a `secrets.toml` file withi
 First, copy the example secrets file:
 
 ```bash
-cp secrets.example.toml .streamlit/secrets.toml
+cp .streamlit/secrets.example.toml .streamlit/secrets.toml
 ```
 
 Next, open `.streamlit/secrets.toml` and populate it with your specific Google Cloud and agent information:
