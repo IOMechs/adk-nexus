@@ -5,9 +5,7 @@
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.47.0-red.svg)](https://www.streamlit.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-<video autoplay loop muted width="100%">
-  <source src="./public/ADK-Nexus-Demo.mp4" type="video/mp4">
-</video>
+![ADK Nexus Demo](./public/ADK-Nexus-Demo.gif)
 
 A turnkey, open-source Streamlit chatbot interface designed for seamless integration with agents deployed on Google Cloud's Vertex AI Agent Engine. This project empowers developers to effortlessly connect their custom agents, deploy them, and share them with the world.
 
