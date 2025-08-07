@@ -289,6 +289,9 @@ def gcp_credentials_dialog(error=None):
 			# Store as single JSON string in local storage
 			localS.setItem("gcp_credentials", json.dumps(gcp_credentials), key="set_gcp_credentials")
 
+			import time
+			time.sleep(0.2)
+
 			st.success("GCP credentials saved successfully!")
 
 			if st.query_params.get("session_id"):
